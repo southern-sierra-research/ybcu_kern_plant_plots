@@ -1,0 +1,39 @@
+---
+title: "ybcu_kern_plant_plots"
+author: "Patrick D. lorch"
+date: "2025-02-13"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Bring in spreadsheet data
+
+
+
+### 2024
+
+
+```{r dataingest24}
+library(dplyr)
+# install.packages(rio)
+library(rio)
+
+data_list_2024 = import_list(file.path("C:",
+                        "Users",
+                        "PatrickLorch",
+                        "SSRS",
+                        "Southern Sierra Research Station - Documents",
+                        "Projects",
+                        "YBCU - Other_Kern",
+                        "Data",
+                        "2024",
+                        "YBCU Nest Veg 2024-needs foliage density compilation.xlsx")) # , setclass = "tbl", , which = c(1, 2)
+
+names(data_list_2024)
+View(data_list_2024$Canopy)
+
+```
+
