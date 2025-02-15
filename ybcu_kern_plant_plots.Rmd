@@ -12,14 +12,17 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Bring in spreadsheet data
 
 
-
 ### 2024
 
+This assumes output from ArcGIS fieldmaps.
+
+Tallys live and dead hits at each meter of height at each meter along a cardinal direction transect.
 
 ```{r dataingest24}
 library(dplyr)
 # install.packages(rio)
 library(rio)
+library(qdapTools)
 
 data_list_2024 = import_list(file.path("C:",
                         "Users",
@@ -33,7 +36,110 @@ data_list_2024 = import_list(file.path("C:",
                         "YBCU Nest Veg 2024-needs foliage density compilation.xlsx")) # , setclass = "tbl", , which = c(1, 2)
 
 names(data_list_2024)
-View(data_list_2024$Canopy)
+View(data_list_2024$E_Foliage_Density)
 
+e_density_24 = data_list_2024$E_Foliage_Density
+w_density_24 = data_list_2024$W_Foliage_Density
+n_density_24 = data_list_2024$N_Foliage_Density
+s_density_24 = data_list_2024$S_Foliage_Density
+# names(e_density_24)
+
+e_density_24_hits = e_density_24 %>%
+  select(1:109)
+w_density_24_hits = w_density_24 %>%
+  select(1:109)
+n_density_24_hits = n_density_24 %>%
+  select(1:109)
+s_density_24_hits = s_density_24 %>%
+  select(1:109)
+
+base_names = names(e_density_24_hits)[c(1:4, 105:109)]
+hit_col_names = names(e_density_24_hits)[5:104]
+heights = unique(sapply(strsplit(hit_col_names," "), `[`, 2))
+
+e_density_24_hits_sum = e_density_24_hits %>%
+  select(contains(base_names))
+hit_tally = function(df = e_density_24_hits, hght){
+  df %>%
+    select(contains(hght)) %>%
+    t() %>%
+    as_tibble() %>%
+    qdapTools::mtabulate() %>%
+    rename_with(~ paste0(hght, " ", .x, recycle0 = T))
+}
+
+e_density_24_hits_sum = 
+  e_density_24_hits %>%
+     mutate(hit_tally(hght = heights[1]),
+            hit_tally(hght = heights[2]),
+            hit_tally(hght = heights[3]),
+            hit_tally(hght = heights[4]),
+            hit_tally(hght = heights[5]),
+            hit_tally(hght = heights[6]),
+            hit_tally(hght = heights[7]),
+            hit_tally(hght = heights[8]),
+            hit_tally(hght = heights[9]),
+            hit_tally(hght = heights[10])) %>%
+  select(contains(base_names), ends_with(c(" X", " D"))) %>%
+  rename_with(~ gsub(" X", " live", .x, fixed = T)) %>%
+  rename_with(~ gsub(" D", " dead", .x, fixed = T))
+
+write.csv(e_density_24_hits_sum, "e_density_24_hits_sum.csv", row.names = F)
+
+w_density_24_hits_sum = 
+  w_density_24_hits %>%
+     mutate(hit_tally(hght = heights[1]),
+            hit_tally(hght = heights[2]),
+            hit_tally(hght = heights[3]),
+            hit_tally(hght = heights[4]),
+            hit_tally(hght = heights[5]),
+            hit_tally(hght = heights[6]),
+            hit_tally(hght = heights[7]),
+            hit_tally(hght = heights[8]),
+            hit_tally(hght = heights[9]),
+            hit_tally(hght = heights[10])) %>%
+  select(contains(base_names), ends_with(c(" X", " D"))) %>%
+  rename_with(~ gsub(" X", " live", .x, fixed = T)) %>%
+  rename_with(~ gsub(" D", " dead", .x, fixed = T))
+
+write.csv(w_density_24_hits_sum, "w_density_24_hits_sum.csv", row.names = F)
+
+n_density_24_hits_sum = 
+  n_density_24_hits %>%
+     mutate(hit_tally(hght = heights[1]),
+            hit_tally(hght = heights[2]),
+            hit_tally(hght = heights[3]),
+            hit_tally(hght = heights[4]),
+            hit_tally(hght = heights[5]),
+            hit_tally(hght = heights[6]),
+            hit_tally(hght = heights[7]),
+            hit_tally(hght = heights[8]),
+            hit_tally(hght = heights[9]),
+            hit_tally(hght = heights[10])) %>%
+  select(contains(base_names), ends_with(c(" X", " D"))) %>%
+  rename_with(~ gsub(" X", " live", .x, fixed = T)) %>%
+  rename_with(~ gsub(" D", " dead", .x, fixed = T))
+
+write.csv(n_density_24_hits_sum, "n_density_24_hits_sum.csv", row.names = F)
+
+s_density_24_hits_sum = 
+  s_density_24_hits %>%
+     mutate(hit_tally(hght = heights[1]),
+            hit_tally(hght = heights[2]),
+            hit_tally(hght = heights[3]),
+            hit_tally(hght = heights[4]),
+            hit_tally(hght = heights[5]),
+            hit_tally(hght = heights[6]),
+            hit_tally(hght = heights[7]),
+            hit_tally(hght = heights[8]),
+            hit_tally(hght = heights[9]),
+            hit_tally(hght = heights[10])) %>%
+  select(contains(base_names), ends_with(c(" X", " D"))) %>%
+  rename_with(~ gsub(" X", " live", .x, fixed = T)) %>%
+  rename_with(~ gsub(" D", " dead", .x, fixed = T))
+
+write.csv(s_density_24_hits_sum, "s_density_24_hits_sum.csv", row.names = F)
+  
+  
 ```
 
