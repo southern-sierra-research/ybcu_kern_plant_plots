@@ -164,37 +164,32 @@ library(dplyr)
 veg_plots_24 = data_list_2024$Vegetation_Sampling_Plots
 names(veg_plots_24)
 
-e_density_24_hits_sum_w_plot = veg_plots_24 %>%
+veg_den_plot_join = function(veg = veg_plots_24,
+                             den = e_density_24_hits_sum){
+  veg %>%
   rename(OBJECTID_plot = OBJECTID,
          CreationDate_plot = CreationDate,
          LastEditDate_plot = LastEditDate,
          Longitude = x,
          Latitude = y) %>%
-  left_join(e_density_24_hits_sum, by = join_by(GlobalID == "Parent GUID"))
+  left_join(den, by = join_by(GlobalID == "Parent GUID"))
+}
 
-w_density_24_hits_sum_w_plot = veg_plots_24 %>%
-  rename(OBJECTID_plot = OBJECTID,
-         CreationDate_plot = CreationDate,
-         LastEditDate_plot = LastEditDate,
-         Longitude = x,
-         Latitude = y) %>%
-  left_join(w_density_24_hits_sum, by = join_by(GlobalID == "Parent GUID"))
+e_density_24_hits_sum_w_plot = 
+  veg_den_plot_join(veg = veg_plots_24,
+                    den = e_density_24_hits_sum)
 
-n_density_24_hits_sum_w_plot = veg_plots_24 %>%
-  rename(OBJECTID_plot = OBJECTID,
-         CreationDate_plot = CreationDate,
-         LastEditDate_plot = LastEditDate,
-         Longitude = x,
-         Latitude = y) %>%
-  left_join(n_density_24_hits_sum, by = join_by(GlobalID == "Parent GUID"))
+w_density_24_hits_sum_w_plot = 
+  veg_den_plot_join(veg = veg_plots_24,
+                    den = w_density_24_hits_sum)
 
-s_density_24_hits_sum_w_plot = veg_plots_24 %>%
-  rename(OBJECTID_plot = OBJECTID,
-         CreationDate_plot = CreationDate,
-         LastEditDate_plot = LastEditDate,
-         Longitude = x,
-         Latitude = y) %>%
-  left_join(s_density_24_hits_sum, by = join_by(GlobalID == "Parent GUID"))
+n_density_24_hits_sum_w_plot = 
+  veg_den_plot_join(veg = veg_plots_24,
+                    den = n_density_24_hits_sum)
+
+s_density_24_hits_sum_w_plot = 
+  veg_den_plot_join(veg = veg_plots_24,
+                    den = s_density_24_hits_sum)
 
 ```
 
