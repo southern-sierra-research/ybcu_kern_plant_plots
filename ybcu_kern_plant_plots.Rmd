@@ -59,6 +59,14 @@ heights = unique(sapply(strsplit(hit_col_names," "), `[`, 2))
 
 e_density_24_hits_sum = e_density_24_hits %>%
   select(contains(base_names))
+```
+
+## Tally hits 
+
+Tally number of 1m heights that have veg at each 1m stop along transects in each cardinal direction.
+
+```{r hittally}
+
 hit_tally = function(df = e_density_24_hits, hght){
   df %>%
     select(contains(hght)) %>%
@@ -141,5 +149,52 @@ s_density_24_hits_sum =
 write.csv(s_density_24_hits_sum, "s_density_24_hits_sum.csv", row.names = F)
   
   
+```
+
+
+## Join in plot data
+
+This is an example of how you would join  plot data to other subtables for analyses that require this.
+
+Just show an example of 
+
+```{r joinplot}
+library(dplyr)
+
+veg_plots_24 = data_list_2024$Vegetation_Sampling_Plots
+names(veg_plots_24)
+
+e_density_24_hits_sum_w_plot = veg_plots_24 %>%
+  rename(OBJECTID_plot = OBJECTID,
+         CreationDate_plot = CreationDate,
+         LastEditDate_plot = LastEditDate,
+         Longitude = x,
+         Latitude = y) %>%
+  left_join(e_density_24_hits_sum, by = join_by(GlobalID == "Parent GUID"))
+
+w_density_24_hits_sum_w_plot = veg_plots_24 %>%
+  rename(OBJECTID_plot = OBJECTID,
+         CreationDate_plot = CreationDate,
+         LastEditDate_plot = LastEditDate,
+         Longitude = x,
+         Latitude = y) %>%
+  left_join(w_density_24_hits_sum, by = join_by(GlobalID == "Parent GUID"))
+
+n_density_24_hits_sum_w_plot = veg_plots_24 %>%
+  rename(OBJECTID_plot = OBJECTID,
+         CreationDate_plot = CreationDate,
+         LastEditDate_plot = LastEditDate,
+         Longitude = x,
+         Latitude = y) %>%
+  left_join(n_density_24_hits_sum, by = join_by(GlobalID == "Parent GUID"))
+
+s_density_24_hits_sum_w_plot = veg_plots_24 %>%
+  rename(OBJECTID_plot = OBJECTID,
+         CreationDate_plot = CreationDate,
+         LastEditDate_plot = LastEditDate,
+         Longitude = x,
+         Latitude = y) %>%
+  left_join(s_density_24_hits_sum, by = join_by(GlobalID == "Parent GUID"))
+
 ```
 
